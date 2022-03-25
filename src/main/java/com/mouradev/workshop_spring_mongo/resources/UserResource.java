@@ -1,8 +1,9 @@
 package com.mouradev.workshop_spring_mongo.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.mouradev.workshop_spring_mongo.domain.User;
+import com.mouradev.workshop_spring_mongo.dto.UserDTO;
 import com.mouradev.workshop_spring_mongo.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class UserResource {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        List<User> list = service.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<List<UserDTO>> findAll() {
+        List<UserDTO> listDTO = service.findAll().stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(listDTO);
     }
 }
