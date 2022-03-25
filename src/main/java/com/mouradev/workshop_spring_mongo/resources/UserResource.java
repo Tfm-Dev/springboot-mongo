@@ -3,6 +3,7 @@ package com.mouradev.workshop_spring_mongo.resources;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mouradev.workshop_spring_mongo.domain.Post;
 import com.mouradev.workshop_spring_mongo.dto.UserDTO;
 import com.mouradev.workshop_spring_mongo.services.UserService;
 
@@ -49,5 +50,10 @@ public class UserResource {
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable String id, @RequestBody UserDTO userDTO) {
         return ResponseEntity.ok().body(new UserDTO(service.update(id, userDTO.fromDTO())));
+    }
+
+    @GetMapping(value = "/{id}/posts")
+    public ResponseEntity<List<Post>> findPosts(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.findById(id).getPosts());
     }
 }
