@@ -1,8 +1,9 @@
 package com.mouradev.workshop_spring_mongo.resources;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.mouradev.workshop_spring_mongo.domain.Post;
+import com.mouradev.workshop_spring_mongo.dto.PostDTO;
 import com.mouradev.workshop_spring_mongo.services.PostService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +26,18 @@ public class PostResource {
     private PostService service;
 
     @GetMapping
-    public ResponseEntity<List<Post>> findAll() {
-        return ResponseEntity.ok().body(service.findAll());
+    public ResponseEntity<List<PostDTO>> findAll() {
+        return ResponseEntity.ok().body(service.findAll().stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Post> findById(@PathVariable String id) {
-        return ResponseEntity.ok().body(service.findById(id));
+    public ResponseEntity<PostDTO> findById(@PathVariable String id) {
+        return ResponseEntity.ok().body(new PostDTO(service.findById(id)));
     }
 
     @PostMapping
-    public ResponseEntity<Void> insert(@RequestBody Post post) {
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(service.insert(post).getId()).toUri()).build();
+    public ResponseEntity<Void> insert(@RequestBody PostDTO post) {
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(service.insert(post.fromPostDTO()).getId()).toUri()).build();
     }
 
     @DeleteMapping(value = "/{id}")
@@ -46,7 +47,7 @@ public class PostResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post post) {
-        return ResponseEntity.ok().body(service.update(id, post));
+    public ResponseEntity<PostDTO> update(@PathVariable String id, @RequestBody PostDTO post) {
+        return ResponseEntity.ok().body(new PostDTO(service.update(id, post.fromPostDTO())));
     }
 }
