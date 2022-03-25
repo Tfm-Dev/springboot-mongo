@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mouradev.workshop_spring_mongo.domain.Post;
 import com.mouradev.workshop_spring_mongo.repository.PostRepository;
+import com.mouradev.workshop_spring_mongo.resources.util.URL;
 import com.mouradev.workshop_spring_mongo.services.exception.ObjectNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ public class PostService {
 
     public Post findById(String id) {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object not found with id!"));
+    }
+
+    public List<Post> findByTitle(String txt) {
+        return repository.findByTitleContaining(URL.decodeParam(txt));
     }
 
     public Post insert(Post user) {
