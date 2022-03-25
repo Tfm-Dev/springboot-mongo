@@ -31,4 +31,10 @@ public class UserService {
         findById(id);
         repository.deleteById(id);
     }
+
+    public User update(String id, User user) {
+        findById(id);
+        user.setId(id);
+        return repository.save(user);
+    }
 }

@@ -3,7 +3,6 @@ package com.mouradev.workshop_spring_mongo.resources;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mouradev.workshop_spring_mongo.domain.User;
 import com.mouradev.workshop_spring_mongo.dto.UserDTO;
 import com.mouradev.workshop_spring_mongo.services.UserService;
 
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,13 +37,17 @@ public class UserResource {
 
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody UserDTO userDTO) {
-        User user = service.insert(userDTO.fromDTO());
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri()).build();
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(service.insert(userDTO.fromDTO()).getId()).toUri()).build();
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable String id, @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok().body(new UserDTO(service.update(id, userDTO.fromDTO())));
     }
 }
