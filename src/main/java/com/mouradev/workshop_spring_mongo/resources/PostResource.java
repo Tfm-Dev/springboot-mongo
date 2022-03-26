@@ -37,8 +37,8 @@ public class PostResource {
     }
 
     @GetMapping(value = "/search")
-    public ResponseEntity<List<PostDTO>> findByTitle(@RequestParam(value = "title", defaultValue = "") String title) {
-        return ResponseEntity.ok().body(service.findByTitle(title).stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
+    public ResponseEntity<List<PostDTO>> findByQuery(@RequestParam(value = "title", defaultValue = "") String title, @RequestParam(value = "author", defaultValue = "") String author) {
+        return ResponseEntity.ok().body(service.findByQuery(title, author).stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
     }
 
     @PostMapping

@@ -24,8 +24,8 @@ public class PostService {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Object not found with id!"));
     }
 
-    public List<Post> findByTitle(String txt) {
-        return repository.findByTitleContaining(URL.decodeParam(txt));
+    public List<Post> findByQuery(String title, String name) {
+        return repository.findByQuery(URL.decodeParam(title), URL.decodeParam(name));
     }
 
     public Post insert(Post user) {
