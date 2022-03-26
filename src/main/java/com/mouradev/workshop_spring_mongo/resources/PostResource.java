@@ -1,6 +1,7 @@
 package com.mouradev.workshop_spring_mongo.resources;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.mouradev.workshop_spring_mongo.dto.PostDTO;
@@ -22,13 +23,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping(value = "/posts")
 public class PostResource {
-    
+
     @Autowired
     private PostService service;
 
     @GetMapping
     public ResponseEntity<List<PostDTO>> findAll() {
-        return ResponseEntity.ok().body(service.findAll().stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
+        return ResponseEntity.ok()
+                .body(service.findAll().stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/{id}")
@@ -37,13 +39,15 @@ public class PostResource {
     }
 
     @GetMapping(value = "/search")
-    public ResponseEntity<List<PostDTO>> findByQuery(@RequestParam(value = "title", defaultValue = "") String title, @RequestParam(value = "author", defaultValue = "") String author) {
-        return ResponseEntity.ok().body(service.findByQuery(title, author).stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
+    public ResponseEntity<List<PostDTO>> findByQuery(@RequestParam Map<String, String> query) {
+        return ResponseEntity.ok().body(
+                service.findByQuery(query).stream().map(x -> new PostDTO(x)).collect(Collectors.toList()));
     }
 
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody PostDTO post) {
-        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(service.insert(post.fromPostDTO()).getId()).toUri()).build();
+        return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(service.insert(post.fromPostDTO()).getId()).toUri()).build();
     }
 
     @DeleteMapping(value = "/{id}")
